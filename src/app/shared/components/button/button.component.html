@@ -1,0 +1,13 @@
+<button
+    [type]="type"
+    [class.loading]="loading"
+    [disabled]="loading || disabled"
+>
+    <div class="loading-spinner" *ngIf="loading">
+        <div class="loading-block">
+            <div></div>
+        </div>
+    </div>
+    
+    <ng-content></ng-content>
+</button>

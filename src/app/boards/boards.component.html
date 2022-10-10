@@ -1,0 +1,11 @@
+<div *ngIf="boards; else loader">
+    <ul *ngFor="let board of boards">
+        <li>
+            <a [routerLink]="['boards', board.id]">{{ board.name }}</a>
+        </li>
+    </ul>
+</div>
+
+<ng-template #loader>
+    <app-loader></app-loader>
+</ng-template>

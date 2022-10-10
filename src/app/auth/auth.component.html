@@ -1,0 +1,86 @@
+<div class="header">
+    <a routerLink="/" class="logo">My Trello</a>
+    
+    <div class="links">
+        <a
+            routerLink="/login"
+            routerLinkActive="active"
+            class="menu-item"
+        >Login</a>
+        
+        <a
+            routerLink="/registration"
+            routerLinkActive="active"
+            class="menu-item"
+        >Registration</a>
+    </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+    <h1>{{ isLoginPage ? 'Login' : 'Registration'}}</h1>
+    
+    <div class="error-message" *ngIf="backEndError">
+        {{ backEndError }}
+    </div>
+    
+    <div class="input-wrap" *ngIf="!isLoginPage">
+        <label class="label">
+            <input
+                type="text"
+                class="input"
+                formControlName="name"
+                [ngClass]="{
+                    active: this.form.get('name')?.value?.length > 0,
+                    error: this.form.get('name')?.errors && this.form.get('name')?.touched
+                }"
+            >
+            <span class="label-text">Name</span>
+            <span
+                *ngIf="this.form.get('name')?.errors && this.form.get('name')?.touched"
+                class="error-text"
+            >Enter a valid name</span>
+        </label>
+    </div>
+    
+    <div class="input-wrap">
+        <label class="label">
+            <input
+                type="email"
+                class="input"
+                formControlName="email"
+                [ngClass]="{
+                    active: this.form.get('email')?.value?.length > 0,
+                    error: this.form.get('email')?.errors && this.form.get('email')?.touched
+                }"
+            >
+            <span class="label-text">Email</span>
+            <span
+                *ngIf="this.form.get('email')?.errors && this.form.get('email')?.touched"
+                class="error-text"
+            >Enter a valid email</span>
+        </label>
+    </div>
+    
+    <div class="input-wrap">
+        <label class="label">
+            <input
+                type="password"
+                class="input"
+                formControlName="password"
+                [ngClass]="{
+                    active: this.form.get('password')?.value?.length > 0,
+                    error: this.form.get('password')?.errors && this.form.get('password')?.touched
+                }"
+            >
+            <span class="label-text">Password</span>
+            <span
+                *ngIf="this.form.get('password')?.errors && this.form.get('password')?.touched"
+                class="error-text"
+            >Enter a valid password</span>
+        </label>
+    </div>
+    
+    <app-button type="summit" [loading]="loading" [disabled]="form.invalid">
+        Submit
+    </app-button>
+</form>

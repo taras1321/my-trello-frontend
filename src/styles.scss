@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.input {
+    width: 100%;
+    border: 1px solid #bcbcbc;
+    height: 42px;
+    border-radius: 5px;
+    outline: none;
+    padding: 0 15px;
+    color: #3d3d3d;
+    font-size: 15px;
+}
+
+.label {
+    position: relative;
+    display: block;
+}
+
+.label-text {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: #515151c9;
+    padding: 0 3px;
+    background: #fff;
+    font-size: 15px;
+    transition: all .15s ease-in;
+}
+
+.input:focus {
+    border: 1px solid #0079bf;
+}
+
+.input:focus + .label-text, .input.active + .label-text {
+    color: #0079bf;
+    top: 0;
+    font-size: 12px;
+}
+
+.input.active:focus + .label-text {
+    color: #0079bf;
+}
+
+.input.error:focus + .label-text {
+    color: #b04632;
+}
+
+.input.active + .label-text {
+    color: #515151c9;
+}
+
+.input.error {
+    border-color: #b04632;
+}
+
+.input.error + .label-text {
+    color: #b04632;
+}
+
+.error-text {
+    position: absolute;
+    top: 100%;
+    color: #b04632;
+    font-size: 12px;
+    left: 15px;
+    line-height: 20px;
+}
