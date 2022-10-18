@@ -1,11 +1,139 @@
-<div *ngIf="boards; else loader">
-    <ul *ngFor="let board of boards">
-        <li>
-            <a [routerLink]="['boards', board.id]">{{ board.name }}</a>
-        </li>
-    </ul>
+<div class="header">
+    <div class="search-order-wrap">
+        <div class="search-wrap">
+            <input
+                type="text"
+                class="input search-input"
+                placeholder="Search" #searchInput
+                [(ngModel)]="search"
+                (input)="onSearchChange()"
+            >
+            <span
+                class="material-symbols-outlined search-icon"
+                (click)="searchFocus()"
+            >
+            search
+        </span>
+        </div>
+        
+        <div class="orders">
+            <div class="toggle">
+                <button
+                    class="sort"
+                    [class.active]="boardService.sortBy === 'data'"
+                    (click)="toggleSort('data')"
+                >
+                    SORT BY DATE
+                </button>
+                
+                <button
+                    class="sort"
+                    [class.active]="boardService.sortBy === 'name'"
+                    (click)="toggleSort('name')"
+                >
+                    SORT BY NAME
+                </button>
+            </div>
+            
+            <div class="toggle">
+                <button
+                    class="view"
+                    [class.active]="boardService.view === 'grid'"
+                    (click)="boardService.view = 'grid'"
+                >
+                    <span class="material-symbols-outlined grid">grid_view</span>
+                </button>
+                <button
+                    class="view"
+                    [class.active]="boardService.view === 'list'"
+                    (click)="boardService.view = 'list'"
+                >
+                    <span class="material-symbols-outlined list">segment</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <button class="new-board" (click)="showAddBoardPopup = true">
+        <span class="material-symbols-outlined plus">add</span>
+        <span class="text">New board</span>
+    </button>
 </div>
 
-<ng-template #loader>
-    <app-loader></app-loader>
+<div *ngIf="boardService.boards.length > 0 || loading; else noBoards">
+    <div *ngIf="!loading; else loader">
+        <h3 class="title">{{ isFavoritePage ? 'Favorite boards' : 'Boards' }}</h3>
+        
+        <div class="boards" [class.grid]="boardService.view === 'grid'">
+            <a
+                *ngFor="let board of boardService.boards"
+                [routerLink]="['/boards', board.id]"
+                [class.green]="board.color === 'green'"
+                [class.orange]="board.color === 'orange'"
+                class="board"
+            >
+                <h3>{{ board.name }}</h3>
+                
+                <span class="icons">
+                    <span
+                        class="members"
+                        (click)="onMembersClick($event, board.id)"
+                    >
+                        <span class="members-count">
+                            {{ board.membersCount}}
+                        </span>
+                        
+                        <span class="material-symbols-outlined members-icon">
+                             group
+                        </span>
+                    </span>
+                    
+                    <span
+                        class="material-symbols-outlined two-tone star"
+                        [class.liked]="board.liked"
+                        (click)="toggleFavorite($event, board.id)"
+                    >
+                        star
+                    </span>
+                </span>
+            </a>
+        </div>
+        
+        <app-button
+            (onClick)="loadMoreBoards()"
+            [loading]="loadMoreLoading"
+            *ngIf="boardService.boards.length < boardService.boardsCount"
+        >
+            Load more
+        </app-button>
+    </div>
+    
+    <ng-template #loader>
+        <div class="loader-wrap">
+            <app-loader></app-loader>
+        </div>
+    </ng-template>
+</div>
+
+<ng-template #noBoards>
+    <div class="no-boards">
+        <span *ngIf="search?.trim()?.length === 0; else noSearch">
+            You don't have {{ isFavoritePage ? 'favorite' : '' }} boards
+        </span>
+        
+        <ng-template #noSearch>
+            {{ isFavoritePage ? 'Favorite boards' : 'Boards' }} not found
+        </ng-template>
+    </div>
 </ng-template>
+
+<div class="popup-wrap" *ngIf="showAddBoardPopup" @popup>
+    <app-add-board-popup (onClose)="showAddBoardPopup = false"></app-add-board-popup>
+</div>
+
+<div class="popup-wrap" *ngIf="showBoardMembersPopup" @popup>
+    <app-board-members-popup
+        (onClose)="showBoardMembersPopup = false"
+        [boardId]="activeBoardId"
+    ></app-board-members-popup>
+</div>

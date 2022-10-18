@@ -1,0 +1,70 @@
+.member {
+    margin-top: 10px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+
+    .user-data {
+        align-self: flex-start;
+    }
+
+    .name {
+        font-size: 18px;
+        line-height: 25px;
+        color: #5d5d5d;
+    }
+
+    .email {
+        margin-top: 5px;
+        color: #797979;
+        font-size: 16px;
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: flex-start;
+        gap: 5px;
+    }
+}
+
+.members {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.status {
+    color: #fff;
+    font-size: 12px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    margin-right: 10px;
+    background: #9a9a9a;
+}
+
+.status.admin {
+    background: #0079bf;
+}
+
+
+@media (max-width: 575px) {
+    .member {
+        .name {
+            font-size: 16px;
+            line-height: 25px;
+        }
+
+        .email {
+            margin-top: 5px;
+            color: #797979;
+            font-size: 15px;
+        }
+    }
+}

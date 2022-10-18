@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { Event, NavigationStart, Router } from '@angular/router'
+import { Router } from '@angular/router'
 import { Subscription } from 'rxjs'
 import { AuthService } from '../shared/services/auth.service'
 
@@ -25,13 +25,6 @@ export class AuthComponent implements OnInit, OnDestroy {
     
     ngOnInit(): void {
         this.isLoginPage = this.router.url === '/login'
-        
-        this.router.events.subscribe((event: Event) => {
-            if (event instanceof NavigationStart) {
-                this.isLoginPage = this.router.url === '/login'
-            }
-        })
-        
         this.initForm()
     }
     

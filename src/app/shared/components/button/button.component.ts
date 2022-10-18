@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core'
+import { Component, EventEmitter, Input, Output } from '@angular/core'
 
 @Component({
     selector: 'app-button',
@@ -10,5 +10,8 @@ export class ButtonComponent {
     @Input() loading: boolean
     @Input() disabled?: boolean = false
     @Input() type?: 'summit' | 'button' = 'button'
+    @Input() color: 'blue' | 'red' | 'gray'
+    @Input() isSmall: boolean = false
+    @Output() onClick = new EventEmitter()
     
 }

@@ -1,0 +1,48 @@
+<app-popup (onClose)="onClose.emit()" maxWidth="400px">
+    <div class="wrap">
+        <form [formGroup]="form">
+            <label class="label">
+                <input
+                    type="email"
+                    class="input"
+                    formControlName="email"
+                    [ngClass]="{
+                            active: this.form.get('email')?.value?.length > 0,
+                            error: this.form.get('email')?.errors && this.form.get('email')?.touched
+                        }"
+                >
+                <span class="label-text">New member email</span>
+                <span
+                    *ngIf="this.form.get('email')?.errors && this.form.get('email')?.touched"
+                    class="error-text"
+                >Enter a valid email</span>
+            </label>
+            
+            <app-button
+                [loading]="userLoading"
+                (onClick)="findUser()"
+                [disabled]="form.invalid"
+                type="summit"
+            >Find</app-button>
+        </form>
+        
+        <div class="backend-error" *ngIf="error">
+            {{ error }}
+        </div>
+        
+        <div class="user" *ngIf="user">
+            <div class="user-data">
+                <div class="name">{{ user.name }}</div>
+                <div class="email">{{ user.email }}</div>
+            </div>
+            
+            <app-button
+                [isSmall]="true"
+                [loading]="addMemberLoading"
+                (onClick)="addMember()"
+            >
+                Add member
+            </app-button>
+        </div>
+    </div>
+</app-popup>

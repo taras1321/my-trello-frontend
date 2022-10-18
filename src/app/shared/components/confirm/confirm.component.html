@@ -1,0 +1,15 @@
+<app-popup [withCloseIcon]="false" (onClose)="onCloseConfirm()">
+    <div class="confirm">
+        <div class="text">{{ text }}</div>
+    
+        <div class="buttons">
+            <app-button color="red" (onClick)="onConfirm.emit()" [loading]="loading">
+                {{ buttonText }}
+            </app-button>
+    
+            <app-button color="gray" (onClick)="onCloseConfirm()">
+                Cancel
+            </app-button>
+        </div>
+    </div>
+</app-popup>

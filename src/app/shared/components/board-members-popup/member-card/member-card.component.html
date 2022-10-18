@@ -1,0 +1,47 @@
+<div class="member">
+    <div class="user-data">
+        <span
+            class="status"
+            [class.admin]="member.isAdmin"
+        >
+            {{ member.isAdmin ? 'admin' : 'member' }}
+        </span>
+        <span class="name">{{ member.name }}</span>
+        <div class="email">{{ member.email }}</div>
+    </div>
+    
+    <div class="buttons" *ngIf="isCurrentUserAdmin && !isCurrentUserCard">
+        <app-button color="red" [isSmall]="true" (onClick)="showDeleteConfirm = true">
+            Delete
+        </app-button>
+        
+        <app-button
+            [color]="member.isAdmin ? 'gray' : 'blue'"
+            [isSmall]="true"
+            [loading]="loading"
+            (onClick)="member.isAdmin ? makeMember() : makeAdmin()"
+        >
+            {{ member.isAdmin ? 'Make member' : 'Make admin' }}
+        </app-button>
+    </div>
+    
+    <app-button
+        color="red"
+        [isSmall]="true"
+        *ngIf="isCurrentUserCard"
+        (onClick)="showDeleteConfirm = true"
+    >
+        Delete me
+    </app-button>
+</div>
+
+<div @popup class="popup-wrap" *ngIf="showDeleteConfirm">
+    <app-confirm
+        (onCancel)="showDeleteConfirm = false"
+        [text]="getDeleteConfirmText()"
+        buttonText="Delete"
+        (onConfirm)="deleteMember()"
+        [loading]="isDeleteLoading"
+    >
+    </app-confirm>
+</div>

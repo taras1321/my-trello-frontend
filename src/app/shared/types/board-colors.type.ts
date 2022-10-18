@@ -1,0 +1,1 @@
+export type BoardColorsType = 'blue' | 'orange' | 'green'

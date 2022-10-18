@@ -9,9 +9,24 @@ button {
     padding: 10px 25px;
     transition: all .15s ease-in;
     position: relative;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
-button.loading{
+button.small {
+    font-size: 14px;
+    padding: 6px 12px;
+}
+
+button.red {
+    background: #cd5139;
+}
+
+button.gray {
+    background: #9a9a9a;
+}
+
+button.loading {
     color: transparent;
 }
 
@@ -19,10 +34,27 @@ button:hover, button:disabled {
     background: rgba(0, 121, 191, 0.8);
 }
 
-@keyframes loading-animation {
-    0% { transform: translate(-50%,-50%) rotate(0deg); }
-    100% { transform: translate(-50%,-50%) rotate(360deg); }
+button:disabled {
+    cursor: not-allowed;
 }
+
+button.red:hover, button.red:disabled {
+    background: rgba(205, 81, 57, 0.8);
+}
+
+button.gray:hover, button.gray:disabled {
+    background: rgba(154, 154, 154, 0.8);
+}
+
+@keyframes loading-animation {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
 .loading-block div {
     position: absolute;
     width: 45px;
@@ -31,11 +63,13 @@ button:hover, button:disabled {
     border-top-color: transparent;
     border-radius: 50%;
 }
+
 .loading-block div {
     animation: loading-animation 1s linear infinite;
     top: 50px;
     left: 50px
 }
+
 .loading-spinner {
     width: 40px;
     height: 40px;
@@ -46,6 +80,7 @@ button:hover, button:disabled {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
 .loading-block {
     width: 100%;
     height: 100%;
@@ -54,4 +89,7 @@ button:hover, button:disabled {
     backface-visibility: hidden;
     transform-origin: 0 0; /* see note above */
 }
-.loading-block div { box-sizing: content-box; }
+
+.loading-block div {
+    box-sizing: content-box;
+}

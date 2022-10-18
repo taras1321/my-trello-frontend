@@ -1,0 +1,63 @@
+<app-popup (onClose)="onClose.emit()">
+    <div class="content">
+        <h3>Create new board</h3>
+        
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <label class="label">
+                <input
+                    type="text"
+                    class="input"
+                    formControlName="boardName"
+                    [ngClass]="{
+                        active: this.form.get('boardName')?.value?.length > 0,
+                        error: this.form.get('boardName')?.errors && this.form.get('boardName')?.touched
+                    }"
+                >
+                <span class="label-text">Board name</span>
+                <span
+                    *ngIf="this.form.get('boardName')?.errors && this.form.get('boardName')?.touched"
+                    class="error-text"
+                >
+                    Enter a valid name
+                </span>
+            </label>
+            
+            <div class="colors-wrap">
+                <span class="text">Board color</span>
+                
+                <div class="colors">
+                    <button
+                        class="color blue"
+                        [class.active]="color === 'blue'"
+                        (click)="color = 'blue'"
+                        type="button"
+                    >
+                        <span class="material-symbols-outlined selected">done</span>
+                    </button>
+                    
+                    <button
+                        class="color orange"
+                        [class.active]="color === 'orange'"
+                        (click)="color = 'orange'"
+                        type="button"
+                    >
+                        <span class="material-symbols-outlined selected">done</span>
+                    </button>
+                    
+                    <button
+                        class="color green"
+                        [class.active]="color === 'green'"
+                        (click)="color = 'green'"
+                        type="button"
+                    >
+                        <span class="material-symbols-outlined selected">done</span>
+                    </button>
+                </div>
+            </div>
+            
+            <app-button type="summit" [loading]="loading" [disabled]="form.invalid">
+                Create
+            </app-button>
+        </form>
+    </div>
+</app-popup>

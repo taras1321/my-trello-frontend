@@ -1,0 +1,75 @@
+<div class="header main-header">
+    <h1 class="logo">My Trello</h1>
+    
+    <span class="material-symbols-outlined menu-icon" (click)="onShowMobileMenu()">
+        menu
+    </span>
+</div>
+
+<div class="container">
+    <div class="wrap">
+        <div class="nav" [class.active]="showMobileMenu">
+            <ul class="menu">
+                <li class="menu-item">
+                    <a
+                        routerLink="/"
+                        routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}"
+                        class="menu-link"
+                        (click)="closeMobileMenu()"
+                    >
+                        All boards
+                    </a>
+                </li>
+                
+                <li class="menu-item">
+                    <a
+                        routerLink="/favorite"
+                        routerLinkActive="active"
+                        class="menu-link"
+                        (click)="closeMobileMenu()"
+                    >
+                        Favorite boards
+                    </a>
+                </li>
+                
+                <li class="menu-item border-bottom">
+                    <a
+                        routerLink="/settings"
+                        routerLinkActive="active"
+                        class="menu-link"
+                        (click)="closeMobileMenu()"
+                    >
+                        Settings
+                    </a>
+                </li>
+                
+                <li class="menu-item">
+                    <button class="logout" (click)="onLogoutClick()">Log out</button>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="main">
+            
+            <router-outlet></router-outlet>
+        
+        </div>
+    </div>
+
+</div>
+
+<div *ngIf="showLogoutConfirm" class="popup-wrap" @popup>
+    <app-confirm
+        text="Are you sure want to log out?"
+        buttonText="Log out"
+        (onCancel)="showLogoutConfirm = false"
+        (onConfirm)="logout()"
+    ></app-confirm>
+</div>
+
+<div
+    class="overlay"
+    [class.active]="showMobileMenu"
+    (click)="closeMobileMenu()"
+></div>

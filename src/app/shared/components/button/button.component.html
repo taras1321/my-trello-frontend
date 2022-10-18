@@ -1,7 +1,11 @@
 <button
     [type]="type"
-    [class.loading]="loading"
     [disabled]="loading || disabled"
+    [class.loading]="loading"
+    [class.red]="color === 'red'"
+    [class.gray]="color === 'gray'"
+    [class.small]="isSmall"
+    (click)="onClick.emit()"
 >
     <div class="loading-spinner" *ngIf="loading">
         <div class="loading-block">

@@ -1,0 +1,32 @@
+.loader-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.wrap {
+    padding: 35px 30px 30px 30px;
+}
+
+h3 {
+    color: rgba(23, 43, 77, 0.77);
+    text-align: center;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 15px;
+
+    .board-name {
+        text-transform: uppercase;
+    }
+}
+
+.add-btn-wrap {
+    margin-top: 20px;
+}
+
+@media (max-width: 575px) {
+    .wrap {
+        padding: 35px 10px 20px 10px;
+    }
+}

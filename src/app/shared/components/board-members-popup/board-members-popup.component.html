@@ -1,0 +1,49 @@
+<app-popup (onClose)="onClose.emit()" [maxWidth]="'500px'">
+    <div class="wrap" *ngIf="!loading; else loader">
+        <h3>Board - <span class="board-name">"{{ boardMembersData.boardName }}"</span></h3>
+        
+        <app-member-card
+            [isCurrentUserAdmin]="boardMembersData.currentUser.isAdmin"
+            [member]="boardMembersData.currentUser"
+            [isCurrentUserCard]="true"
+            [boardId]="boardId"
+            [boardMembersData]="boardMembersData"
+            (onCloseMembersPopup)="onClose.emit()"
+        ></app-member-card>
+        
+        <div class="members" *ngIf="boardMembersData.members.length > 0">
+            <app-member-card
+                *ngFor="let member of boardMembersData.members"
+                [isCurrentUserAdmin]="boardMembersData.currentUser.isAdmin"
+                [member]="member"
+                [boardId]="boardId"
+                [boardMembersData]="boardMembersData"
+                (onCloseMembersPopup)="onClose.emit()"
+            ></app-member-card>
+        </div>
+        
+        <div class="add-btn-wrap" *ngIf="boardMembersData.currentUser.isAdmin">
+            <app-button (onClick)="showAddMemberPopup = true">
+                Add member
+            </app-button>
+        </div>
+    </div>
+    
+    <ng-template #loader>
+        <div class="loader-wrap">
+            <app-loader></app-loader>
+        </div>
+    </ng-template>
+    
+    <div class="popup-wrap" @popup *ngIf="showAddMemberPopup">
+        <app-add-member-popup
+            (onClose)="showAddMemberPopup = false"
+            [boardId]="boardId"
+            [boardCurrentUserEmail]="boardMembersData.currentUser.email"
+            [boardAdminEmails]="getCurrentBoardAdminEmails()"
+            [boardMemberEmails]="getCurrentBoardMemberEmails()"
+            [boardMembersData]="boardMembersData"
+        ></app-add-member-popup>
+    </div>
+</app-popup>
+

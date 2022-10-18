@@ -1,0 +1,45 @@
+.wrap {
+    padding: 45px 20px 45px 20px;
+}
+
+form {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+
+    label {
+        flex: 1;
+    }
+}
+
+.backend-error {
+    color: rgba(176, 70, 50, 0.75);
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 15px;
+    text-align: center;
+    transform: translateY(10px);
+}
+
+.user {
+    margin-top: 25px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+
+    .name {
+        font-size: 18px;
+        line-height: 25px;
+        color: #5d5d5d;
+    }
+
+    .email {
+        margin-top: 5px;
+        color: #797979;
+        font-size: 16px;
+    }
+}
