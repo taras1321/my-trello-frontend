@@ -1,0 +1,76 @@
+<div
+    class="board-wrap"
+    [class.orange]="boardData.color === 'orange'"
+    [class.green]="boardData.color === 'green'"
+    *ngIf="!boardLoading; else loader"
+    (click)="onBoardClick($event)"
+>
+    
+    <app-header [boardData]="boardData"></app-header>
+    
+    <div
+        class="board"
+        cdkDropListGroup #board
+        (mousedown)="onMouseDown($event)"
+    >
+        <div *ngFor="let list of boardData.lists">
+            <app-list
+                [list]="list"
+                [allLists]="boardData.lists"
+                [isCurrentUserAdmin]="boardData.isCurrentUserAdmin"
+                (cardDropped)="cardDropped($event)"
+                (drop)="drop($event)"
+                (dragEnd)="dragEnd()"
+                (dragStart)="dragStart()"
+            ></app-list>
+        </div>
+        
+        <div class="add-list" #addList *ngIf="boardData.isCurrentUserAdmin">
+            <form
+                class="add-list-form" *ngIf="showAddListForm else addButton"
+                (ngSubmit)="addNewList()"
+            >
+                <input
+                    [(ngModel)]="newListTitle"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="List title"
+                    #addListInput
+                />
+                <div class="buttons">
+                    <app-button
+                        type="summit"
+                        size="medium"
+                        [loading]="newListLoading"
+                    >
+                        Add list
+                    </app-button>
+                    
+                    <button
+                        type="button"
+                        class="material-symbols-outlined btn-close"
+                        (click)="showAddListForm = false"
+                    >
+                        close
+                    </button>
+                </div>
+            </form>
+            
+            <ng-template #addButton>
+                <button
+                    class="add-button"
+                    #addListButton
+                    (mousedown)="onAddListButtonMouseDown($event)"
+                >
+                    <span class="material-symbols-outlined icon">add</span>
+                    <span class="text">Add list</span>
+                </button>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<ng-template #loader>
+    <div class="loader-wrap">
+        <app-loader></app-loader>
+    </div>
+</ng-template>

@@ -1,0 +1,170 @@
+<app-popup (onClose)="onClose.emit()" maxWidth="500px">
+    <div
+        class="wrap"
+        *ngIf="!loading; else loader"
+        (mousedown)="onMouseDown($event)"
+        (click)="onPopup()"
+    >
+        <form [formGroup]="form" *ngIf="card.isCurrentUserAdmin; else cardData">
+            <label>
+                Card name
+                <input
+                    type="text"
+                    placeholder="Name"
+                    formControlName="name"
+                    (blur)="editCard()"
+                    [class.error]="this.form.get('name')?.errors && this.form.get('name')?.touched"
+                >
+                
+                <span
+                    *ngIf="this.form.get('name')?.errors && this.form.get('name')?.touched"
+                    class="error-text"
+                    [style.left]="'5px'"
+                >
+                    Name can't be empty
+                </span>
+            </label>
+            
+            <label>
+                Description
+                <textarea
+                    placeholder="Add description..."
+                    formControlName="description"
+                    (blur)="editCard()"
+                ></textarea>
+            </label>
+        </form>
+        
+        <ng-template #cardData>
+            <div class="card-date-title">Card name</div>
+            <div class="card-name">{{ card.name }}</div>
+            
+            <div
+                class="description-warp"
+                *ngIf="card.description && card.description.trim().length > 0"
+            >
+                <div class="card-date-title">Description</div>
+                <div class="card-description">{{ card.description }}</div>
+            </div>
+        </ng-template>
+        
+        <div class="select-and-button-wrap">
+            <button class="select" (click)="onSelectClick($event)">
+                <div class="select-title">Executor</div>
+                <div class="selected-value">
+                    {{ card.executor ? getOptionName(card.executor.id, card.executor.name) : 'none' }}
+                </div>
+                
+                <span class="material-symbols-outlined icon">
+                    expand_more
+                </span>
+                
+                <div class="options" *ngIf="showSelectOptions">
+                    <button
+                        class="option"
+                        [class.selected]="!card.executor"
+                        (click)="onOptionClick($event, null)"
+                    >
+                        none
+                    </button>
+                    <button
+                        class="option"
+                        *ngFor="let admin of card.board.admins"
+                        [class.selected]="card.executor?.id == admin.id"
+                        (click)="onOptionClick($event, admin)"
+                    >
+                        {{ getOptionName(admin.id, admin.name) }}
+                    </button>
+                    <button
+                        class="option"
+                        *ngFor="let member of card.board.members"
+                        [class.selected]="card.executor?.id == member.id"
+                        (click)="onOptionClick($event, member)"
+                    >
+                        {{ getOptionName(member.id, member.name) }}
+                    </button>
+                </div>
+            </button>
+            
+            <app-button
+                color="red"
+                size="medium"
+                (onClick)="showDeleteCardConfirm = true"
+                *ngIf="card.isCurrentUserAdmin"
+            >
+                Delete card
+            </app-button>
+        </div>
+        
+        <div class="comments-warp">
+            <div class="comments" *ngIf="card.comments.length > 0">
+                <h3>Comments</h3>
+                
+                <div class="comment" *ngFor="let comment of card.comments">
+                    <div class="header">
+                        <div class="author">
+                            {{ getCommentAuthor(comment) }}
+                        </div>
+                        
+                        <div class="date-and-delete">
+                            <div class="date">{{ comment.createdDate | date:'d MMM yyyy'}}</div>
+                            <button
+                                *ngIf="card.isCurrentUserAdmin || comment.user.id == card.currentUserId"
+                                (click)="onDeleteCommentClick(comment.id)"
+                                class="material-symbols-outlined delete"
+                            >
+                                close
+                            </button>
+                        </div>
+                    
+                    </div>
+                    
+                    <div class="text">{{ comment.text }}</div>
+                </div>
+            </div>
+            
+            <textarea
+                placeholder="Write something..."
+                [(ngModel)]="commentText"
+                (keydown.enter)="addComment($event)"
+            ></textarea>
+            
+            <div class="btn-wrap">
+                <app-button
+                    size="medium"
+                    (onClick)="addComment()"
+                    [loading]="createCommentLoading"
+                    [disabled]="commentText.trim().length === 0"
+                >
+                    Add comment
+                </app-button>
+            </div>
+        </div>
+    </div>
+    
+    <div *ngIf="showDeleteCardConfirm" class="popup-wrap" @popup>
+        <app-confirm
+            [loading]="deleteLoading"
+            (onCancel)="showDeleteCardConfirm = false"
+            (onConfirm)="onCardDelete()"
+            [buttonText]="'Delete'"
+            [text]="'Are you sure want to delete this card?'"
+        ></app-confirm>
+    </div>
+    
+    <div *ngIf="showDeleteCommentConfirm" class="popup-wrap" @popup>
+        <app-confirm
+            [loading]="deleteCommentLoading"
+            (onCancel)="closeDeleteCommentConfirm()"
+            (onConfirm)="onCommentDelete()"
+            [buttonText]="'Delete'"
+            [text]="'Are you sure want to delete this comment?'"
+        ></app-confirm>
+    </div>
+    
+    <ng-template #loader>
+        <div class="loader-wrap">
+            <app-loader></app-loader>
+        </div>
+    </ng-template>
+</app-popup>

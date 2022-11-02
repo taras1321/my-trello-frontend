@@ -64,8 +64,7 @@
 
 .loading div:nth-child(3) {
     left: 67.5px;
-    animation: loading-animation-3
-    1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+    animation: loading-animation-3 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
 
 .loading-spinner {

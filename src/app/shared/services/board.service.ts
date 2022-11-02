@@ -8,8 +8,11 @@ import { AddMemberInterface } from '../types/add-member.interface'
 import { BoardMembersInterface } from '../types/board-members.interface'
 import { BoardInterface } from '../types/board.interface'
 import { BoardsResponseInterface } from '../types/boards-response.interface'
+import { ChangeOrderInterface } from '../types/change-order.interface'
 import { CreateBoardResponseInterface } from '../types/create-board-response.interface'
-import { CreateBoardInterface } from '../types/create-board.interface'
+import { CreateOrEditBoardInterface } from '../types/create-or-edit-board.interface'
+import { EditBoardResponseInterface } from '../types/edit-board-response.interface'
+import { FullBoardInterface } from '../types/full-board.interface'
 import { ToggleFavoriteInterface } from '../types/toggle-favorite.interface'
 
 @Injectable({ providedIn: 'root' })
@@ -57,9 +60,27 @@ export class BoardService {
         return this.http.get<BoardsResponseInterface>(url, { params })
     }
     
-    createBoard(newBoard: CreateBoardInterface): Observable<CreateBoardResponseInterface> {
+    getBoardById(boardId: number): Observable<FullBoardInterface> {
+        const url = `${environment.apiUrl}/board/${boardId}`
+        return this.http.get<FullBoardInterface>(url)
+    }
+    
+    createBoard(newBoard: CreateOrEditBoardInterface): Observable<CreateBoardResponseInterface> {
         const url = `${environment.apiUrl}/board/create`
         return this.http.post<CreateBoardResponseInterface>(url, newBoard)
+    }
+    
+    editBoard(
+        boardData: CreateOrEditBoardInterface,
+        boardId: number
+    ): Observable<EditBoardResponseInterface> {
+        const url = `${environment.apiUrl}/board/${boardId}`
+        return this.http.put<EditBoardResponseInterface>(url, boardData)
+    }
+    
+    deleteBoard(boardId: number): Observable<void> {
+        const url = `${environment.apiUrl}/board/${boardId}`
+        return this.http.delete<void>(url)
     }
     
     getBoardMembers(boardId: number): Observable<BoardMembersInterface> {
@@ -84,6 +105,11 @@ export class BoardService {
     
     removeMember(data: AddMemberInterface): Observable<void> {
         const url = environment.apiUrl + '/board/remove-member'
+        return this.http.post<void>(url, data)
+    }
+    
+    changeOrder(data: ChangeOrderInterface): Observable<void> {
+        const url = environment.apiUrl + '/board/change-order'
         return this.http.post<void>(url, data)
     }
     

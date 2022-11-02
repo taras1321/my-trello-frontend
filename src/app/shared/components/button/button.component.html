@@ -4,7 +4,8 @@
     [class.loading]="loading"
     [class.red]="color === 'red'"
     [class.gray]="color === 'gray'"
-    [class.small]="isSmall"
+    [class.small]="this.size === 'small'"
+    [class.medium]="this.size === 'medium'"
     (click)="onClick.emit()"
 >
     <div class="loading-spinner" *ngIf="loading">

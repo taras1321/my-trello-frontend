@@ -1,0 +1,30 @@
+<app-popup (onClose)="onClose.emit()">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+        <h3>Edit list</h3>
+        
+        <label class="label">
+            <input
+                type="text"
+                class="input"
+                formControlName="name"
+                [ngClass]="{
+                    active: this.form.get('name')?.value?.length > 0,
+                    error: this.form.get('name')?.errors && this.form.get('name')?.touched
+                }"
+            >
+            <span class="label-text">List name</span>
+            <span
+                *ngIf="this.form.get('name')?.errors && this.form.get('name')?.touched"
+                class="error-text"
+            >Enter a valid name</span>
+        </label>
+    
+        <div class="button-wrap">
+            <app-button
+                type="summit"
+                [disabled]="form.invalid"
+                [loading]="loading"
+            >Save</app-button>
+        </div>
+    </form>
+</app-popup>

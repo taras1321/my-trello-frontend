@@ -1,0 +1,205 @@
+.list-wrapper {
+    padding: 0 4px;
+    min-height: 100%;
+}
+
+.list {
+    padding-top: 40px;
+    padding-bottom: 5px;
+    position: relative;
+    width: 270px;
+    background-color: #ebecf0;
+    border-radius: 3px;
+    color: rgb(23, 43, 77);
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 35px;
+
+    .title {
+        font-size: 16px;
+        margin-top: 10px;
+        margin-left: 15px;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .menu {
+        position: relative;
+        margin: 5px 5px 0 5px;
+        min-width: 30px;
+        height: 30px;
+        border-radius: 3px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        border: none;
+        background: transparent;
+
+        .icon {
+            font-size: 20px;
+            opacity: 0.7;
+            font-weight: 600;
+        }
+    }
+
+    .menu:hover {
+        background-color: rgba(9, 30, 66, 0.08);
+    }
+}
+
+.add-card {
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 10px;
+    padding: 0 10px;
+}
+
+.add-card-button {
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    width: 100%;
+    height: 30px;
+    position: relative;
+    font-weight: 400;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: rgb(23, 43, 77);
+
+    .icon {
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+    }
+
+    .text {
+        margin-left: 35px;
+        font-size: 16px;
+    }
+}
+
+.add-card-button:hover {
+    background-color: rgba(9, 30, 66, 0.08);
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+}
+
+textarea {
+    border: none;
+    border-radius: 3px;
+    width: 100%;
+    height: 60px;
+    outline: none;
+    box-shadow: 0 1px 0 rgba(9, 30, 66, 0.2);
+    font-size: 15px;
+    margin-bottom: 4px;
+    padding: 7px;
+    resize: none;
+    cursor: pointer;
+}
+
+.btn-add {
+    background-color: #0079bf;
+    border-radius: 3px;
+    border: none;
+    color: #fff;
+    padding: 7px 15px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.btn-close {
+    margin-left: 10px;
+    color: rgb(80, 80, 80);
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.btn-close:hover {
+    color: rgba(80, 80, 80, 0.7);
+}
+
+.card {
+    margin: 0 10px 8px;
+    background-color: #fff;
+    padding: 7px 7px 7px 10px;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(9, 30, 66, 0.2);
+    font-size: 15px;
+    position: relative;
+    cursor: pointer;
+    word-wrap: break-word;
+    border: none;
+    text-align: left;
+    color: rgb(23, 43, 77);
+
+    .comments {
+        position: absolute;
+        bottom: 5px;
+        left: 10px;
+        display: flex;
+        align-items: flex-start;
+        line-height: 14px;
+        font-size: 13px;
+        gap: 3px;
+        opacity: 0.6;
+
+        .icon {
+            font-size: 15px;
+        }
+    }
+
+    .user {
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        font-size: 16px;
+        opacity: 0.6;
+    }
+}
+
+.card:hover {
+    background-color: rgba(252, 252, 252, 0.5);
+}
+
+.pb40 {
+    padding-bottom: 40px;
+}
+
+.pb30 {
+    padding-bottom: 30px;
+}
+
+.pb110 {
+    padding-bottom: 110px;
+}
+
+.cdk-drag.cdk-drag-preview {
+    box-shadow: 0 0 10px 1px rgba(9, 30, 66, 0.2);
+}
+
+.cdk-drag-placeholder {
+    background: #dcdcdc;
+    color: transparent;
+    box-shadow: none;
+}

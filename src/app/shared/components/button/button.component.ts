@@ -11,7 +11,7 @@ export class ButtonComponent {
     @Input() disabled?: boolean = false
     @Input() type?: 'summit' | 'button' = 'button'
     @Input() color: 'blue' | 'red' | 'gray'
-    @Input() isSmall: boolean = false
+    @Input() size: 'big' | 'medium' | 'small' = 'big'
     @Output() onClick = new EventEmitter()
     
 }

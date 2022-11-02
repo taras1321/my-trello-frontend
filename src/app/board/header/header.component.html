@@ -1,0 +1,49 @@
+<div class="logo-wrap">
+    <a routerLink="/" class="logo">My Trello</a>
+</div>
+
+<div class="info">
+    <div class="name-favorite">
+        <div class="board-name">
+            {{ boardData.name }}
+        </div>
+        
+        <button (click)="toggleFavorite()">
+            <span
+                class="material-symbols-outlined icon-star"
+                [class.liked]="boardData.liked"
+            >
+                grade
+            </span>
+        </button>
+    </div>
+    
+    <button *ngIf="boardData.isCurrentUserAdmin" (click)="showEditBoardPopup = true">
+        Edit board
+        <span class="material-symbols-outlined icon-edit">
+            edit
+        </span>
+    </button>
+    
+    <button (click)="showMembersPopUp = true">
+        Members
+        <span class="material-symbols-outlined icon-members">
+             group
+        </span>
+    </button>
+</div>
+
+<div class="popup-wrap" *ngIf="showMembersPopUp" @popup>
+    <app-board-members-popup
+        (onClose)="showMembersPopUp = false"
+        [boardId]="boardData.id"
+    ></app-board-members-popup>
+</div>
+
+<div class="popup-wrap" *ngIf="showEditBoardPopup" @popup>
+    <app-add-or-edit-board-popup
+        (onClose)="showEditBoardPopup = false"
+        [isEditBoard]="true"
+        [editBoardData]="boardData"
+    ></app-add-or-edit-board-popup>
+</div>

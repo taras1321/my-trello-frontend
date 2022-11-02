@@ -1,5 +1,5 @@
 .content {
-    padding: 35px 20px 30px 20px;
+    padding: 35px 20px;
 }
 
 h3 {
@@ -75,4 +75,10 @@ h3 {
         }
     }
 
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
 }

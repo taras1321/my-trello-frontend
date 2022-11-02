@@ -128,7 +128,7 @@
 </ng-template>
 
 <div class="popup-wrap" *ngIf="showAddBoardPopup" @popup>
-    <app-add-board-popup (onClose)="showAddBoardPopup = false"></app-add-board-popup>
+    <app-add-or-edit-board-popup (onClose)="showAddBoardPopup = false"></app-add-or-edit-board-popup>
 </div>
 
 <div class="popup-wrap" *ngIf="showBoardMembersPopup" @popup>

@@ -92,3 +92,9 @@ textarea {
     position: relative;
     z-index: 2;
 }
+
+input::placeholder {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+

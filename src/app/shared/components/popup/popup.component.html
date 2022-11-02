@@ -1,9 +1,13 @@
-<div class="overlay" (click)="onClosePopup()">
-    <div class="popup" [style.max-width]="maxWidth" (click)="onPopupClick($event)">
+<div class="overlay" (click)="onOverLayCLick($event)">
+    <div
+        class="popup"
+        [style.max-width]="maxWidth"
+        #popup
+    >
         <button
             class="material-symbols-outlined close"
             *ngIf="withCloseIcon"
-            (click)="onClosePopup()"
+            (click)="closePopup()"
         >
             close
         </button>

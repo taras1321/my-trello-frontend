@@ -11,13 +11,13 @@
     </div>
     
     <div class="buttons" *ngIf="isCurrentUserAdmin && !isCurrentUserCard">
-        <app-button color="red" [isSmall]="true" (onClick)="showDeleteConfirm = true">
+        <app-button color="red" [size]="'small'" (onClick)="showDeleteConfirm = true">
             Delete
         </app-button>
         
         <app-button
             [color]="member.isAdmin ? 'gray' : 'blue'"
-            [isSmall]="true"
+            [size]="'small'"
             [loading]="loading"
             (onClick)="member.isAdmin ? makeMember() : makeAdmin()"
         >
@@ -27,7 +27,7 @@
     
     <app-button
         color="red"
-        [isSmall]="true"
+        [size]="'small'"
         *ngIf="isCurrentUserCard"
         (onClick)="showDeleteConfirm = true"
     >

@@ -14,7 +14,7 @@ export class BoardsComponent implements OnInit {
     
     @ViewChild('searchInput') searchInputRef: ElementRef<HTMLInputElement>
     
-    limit: number = 6
+    readonly limit: number = 6
     loading: boolean
     loadMoreLoading: boolean
     isFavoritePage: boolean
@@ -70,12 +70,10 @@ export class BoardsComponent implements OnInit {
             this.boardService.boardsCount--
         }
         
-        this.boardService.toggleFavorite(boardId).subscribe(({ liked }) => {
-            if (!board) {
-                return
+        this.boardService.toggleFavorite(boardId).subscribe({
+            error: () => {
+                board.liked = !board.liked
             }
-            
-            board.liked = liked
         })
     }
     

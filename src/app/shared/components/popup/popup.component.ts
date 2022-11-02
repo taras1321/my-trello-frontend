@@ -1,5 +1,5 @@
 import {
-    Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output
+    Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild
 } from '@angular/core'
 
 @Component({
@@ -9,12 +9,14 @@ import {
 })
 export class PopupComponent implements OnInit, OnDestroy {
     
+    @ViewChild('popup') popupRef: ElementRef<HTMLDivElement>
+    
     @Input() withCloseIcon: boolean = true
     @Input() maxWidth: string = '300px'
     @Output() onClose = new EventEmitter()
     
     @HostListener('window:keyup.Escape') escape() {
-        this.onClosePopup()
+        this.closePopup()
     }
     
     ngOnInit(): void {
@@ -25,12 +27,16 @@ export class PopupComponent implements OnInit, OnDestroy {
         document.body.style.overflow = 'auto'
     }
     
-    onClosePopup() {
+    closePopup() {
         this.onClose.emit()
     }
     
-    onPopupClick(event: Event): void {
-        event.stopPropagation()
+    onOverLayCLick(event: Event): void {
+        if (this.popupRef.nativeElement.contains(event.target as HTMLElement)) {
+            return
+        }
+        
+        this.closePopup()
     }
     
 }

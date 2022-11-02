@@ -7,9 +7,9 @@
                     class="input"
                     formControlName="email"
                     [ngClass]="{
-                            active: this.form.get('email')?.value?.length > 0,
-                            error: this.form.get('email')?.errors && this.form.get('email')?.touched
-                        }"
+                        active: this.form.get('email')?.value?.length > 0,
+                        error: this.form.get('email')?.errors && this.form.get('email')?.touched
+                    }"
                 >
                 <span class="label-text">New member email</span>
                 <span
@@ -37,7 +37,7 @@
             </div>
             
             <app-button
-                [isSmall]="true"
+                [size]="'small'"
                 [loading]="addMemberLoading"
                 (onClick)="addMember()"
             >

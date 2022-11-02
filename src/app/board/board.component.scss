@@ -1,0 +1,99 @@
+.board-wrap {
+    background: #0079bf;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+}
+
+.board-wrap.orange {
+    background: #d29034;
+}
+
+.board-wrap.green {
+    background: #519839;
+}
+
+.board {
+    position: relative;
+    padding: 8px 10px;
+    display: flex;
+    overflow-x: auto;
+    flex: 1;
+}
+
+.add-list {
+    margin-left: 3px;
+    align-self: start;
+}
+
+.add-button {
+    padding-left: 15px;
+    width: 270px;
+    height: 40px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    transition: all .1s ease-in;
+}
+
+.add-button:hover {
+    background-color: rgba(255, 255, 255, 0.35);
+}
+
+.add-button .icon {
+    font-size: 25px;
+}
+
+.add-button .text {
+    margin-left: 5px;
+    font-size: 17px;
+}
+
+.add-list-form {
+    width: 270px;
+    background-color: #ebecf0;
+    border-radius: 3px;
+    padding: 4px;
+}
+
+input {
+    width: 100%;
+    height: 34px;
+    border: 2.5px solid #0079bf;
+    outline: none;
+    border-radius: 3px;
+    padding: 0 5px;
+    color: rgb(61, 61, 61);
+}
+
+.buttons {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-close {
+    margin-left: 5px;
+    font-size: 25px;
+    color: rgb(80, 80, 80);
+    cursor: pointer;
+    border: none;
+    background: transparent;
+}
+
+.btn-close:hover {
+    color: rgba(80, 80, 80, 0.7);
+}
+
+.loader-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+}

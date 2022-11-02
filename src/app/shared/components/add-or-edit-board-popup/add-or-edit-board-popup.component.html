@@ -1,6 +1,9 @@
-<app-popup (onClose)="onClose.emit()">
+<app-popup
+    (onClose)="onClose.emit()"
+    [maxWidth]="isEditBoard ? '330px' : '300px'"
+>
     <div class="content">
-        <h3>Create new board</h3>
+        <h3>{{ isEditBoard ? 'Edit board' : 'Create new board' }}</h3>
         
         <form [formGroup]="form" (ngSubmit)="submit()">
             <label class="label">
@@ -55,9 +58,31 @@
                 </div>
             </div>
             
-            <app-button type="summit" [loading]="loading" [disabled]="form.invalid">
-                Create
-            </app-button>
+            <div class="buttons">
+                <app-button type="summit" [loading]="loading" [disabled]="form.invalid">
+                    {{ isEditBoard ? 'Save' : 'Create' }}
+                </app-button>
+                
+                <app-button
+                    [color]="'red'"
+                    *ngIf="isEditBoard"
+                    (onClick)="showDeleteConfirm = true"
+                >
+                    Delete
+                </app-button>
+            </div>
         </form>
     </div>
+    
+    <div @popup class="popup-wrap" *ngIf="showDeleteConfirm">
+        <app-confirm
+            (onCancel)="showDeleteConfirm = false"
+            [text]="'Are you sure want to delete this board?'"
+            buttonText="Delete"
+            (onConfirm)="deleteBoard()"
+            [loading]="deleteBoardLoading"
+        >
+        </app-confirm>
+    </div>
 </app-popup>
+

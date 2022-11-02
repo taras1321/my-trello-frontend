@@ -1,6 +1,6 @@
 import { BoardColorsType } from './board-colors.type'
 
-export interface CreateBoardInterface {
+export interface CreateOrEditBoardInterface {
     name: string
     color: BoardColorsType
 }
