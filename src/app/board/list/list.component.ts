@@ -99,7 +99,9 @@ export class ListComponent implements AfterViewInit, OnDestroy {
             this.list.cards.push({
                 ...card,
                 hasExecutor: false,
-                commentsCount: 0
+                executorId: null,
+                commentsCount: 0,
+                commentsCountByUser: []
             })
             
             this.addCardLoading = false

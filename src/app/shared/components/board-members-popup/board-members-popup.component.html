@@ -9,6 +9,7 @@
             [boardId]="boardId"
             [boardMembersData]="boardMembersData"
             (onCloseMembersPopup)="onClose.emit()"
+            [currentLists]="currentLists"
         ></app-member-card>
         
         <div class="members" *ngIf="boardMembersData.members.length > 0">
@@ -19,6 +20,7 @@
                 [boardId]="boardId"
                 [boardMembersData]="boardMembersData"
                 (onCloseMembersPopup)="onClose.emit()"
+                [currentLists]="currentLists"
             ></app-member-card>
         </div>
         

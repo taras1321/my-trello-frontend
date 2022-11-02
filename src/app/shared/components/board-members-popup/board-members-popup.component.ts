@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs'
 import { popupAnimations } from '../../animations/popup-animations'
 import { BoardService } from '../../services/board.service'
 import { BoardMembersInterface } from '../../types/board-members.interface'
+import { ListInterface } from '../../types/list.interface'
 
 @Component({
     selector: 'app-board-members-popup',
@@ -13,6 +14,7 @@ import { BoardMembersInterface } from '../../types/board-members.interface'
 export class BoardMembersPopupComponent implements OnInit, OnDestroy {
     
     @Input() boardId: number
+    @Input() currentLists?: ListInterface[]
     @Output() onClose = new EventEmitter()
     
     loading: boolean = false

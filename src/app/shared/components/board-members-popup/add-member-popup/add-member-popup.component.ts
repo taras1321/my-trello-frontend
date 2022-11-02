@@ -105,6 +105,8 @@ export class AddMemberPopupComponent implements OnInit, OnDestroy {
             if (board) {
                 board.membersCount++
             }
+            
+            this.onClose.emit()
         })
         
         this.subscriptions.push(sub)

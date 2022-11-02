@@ -5,6 +5,7 @@ import { popupAnimations } from '../../../animations/popup-animations'
 import { BoardService } from '../../../services/board.service'
 import { AddOrRemoveMemberInterface } from '../../../types/add-or-remove-member.interface'
 import { BoardMembersInterface } from '../../../types/board-members.interface'
+import { ListInterface } from '../../../types/list.interface'
 import { UserWithBoardStatusType } from '../../../types/user-with-board-status.type'
 
 @Component({
@@ -13,10 +14,11 @@ import { UserWithBoardStatusType } from '../../../types/user-with-board-status.t
     styleUrls: ['./member-card.component.scss'],
     animations: popupAnimations
 })
-export class MemberCardComponent implements OnDestroy{
+export class MemberCardComponent implements OnDestroy {
     
     @Input() isCurrentUserCard: boolean = false
     @Input() isCurrentUserAdmin: boolean
+    @Input() currentLists?: ListInterface[]
     @Input() member: UserWithBoardStatusType
     @Input() boardId: number
     @Input() boardMembersData: BoardMembersInterface
@@ -113,6 +115,24 @@ export class MemberCardComponent implements OnDestroy{
             if (board) {
                 board.membersCount--
             }
+        }
+        
+        if (this.currentLists) {
+            this.currentLists.forEach(list => {
+                list.cards.forEach(card => {
+                    if (card.executorId === this.member.id) {
+                        card.executorId = null
+                        card.hasExecutor = false
+                    }
+                    
+                    const commentsCountByUser = card.commentsCountByUser
+                        .find(obj => obj.userId === this.member.id)
+                    
+                    if (commentsCountByUser) {
+                        card.commentsCount = card.commentsCount - commentsCountByUser.commentsCount
+                    }
+                })
+            })
         }
         
         this.boardMembersData.members = this.boardMembersData.members

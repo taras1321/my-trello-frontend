@@ -83,6 +83,7 @@ export class CardPopupComponent implements OnInit, OnDestroy {
         
         if (this.currentCard) {
             this.currentCard.hasExecutor = !!user
+            this.currentCard.executorId = user?.id ?? null
         }
         
         const sub = this.cardService.setExecutor(userId, this.card.id).subscribe()
@@ -136,15 +137,16 @@ export class CardPopupComponent implements OnInit, OnDestroy {
         
         this.createCommentLoading = true
         
-        const sub = this.cardService.addComment(this.commentText, this.card.id).subscribe((comment) => {
-            this.card.comments.push(comment)
-            this.createCommentLoading = false
-            this.commentText = ''
-            
-            if (this.currentCard) {
-                this.currentCard.commentsCount++
-            }
-        })
+        const sub = this.cardService.addComment(this.commentText, this.card.id)
+            .subscribe((comment) => {
+                this.card.comments.push(comment)
+                this.createCommentLoading = false
+                this.commentText = ''
+                
+                if (this.currentCard) {
+                    this.currentCard.commentsCount++
+                }
+            })
         
         this.subscriptions.push(sub)
     }
