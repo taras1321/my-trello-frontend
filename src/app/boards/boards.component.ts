@@ -1,8 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core'
 import { Router } from '@angular/router'
+import { Subscription } from 'rxjs'
 import { popupAnimations } from '../shared/animations/popup-animations'
 import { BoardService } from '../shared/services/board.service'
-import { sortType } from './types/sort.type'
+import { sortType } from '../shared/types/sort.type'
 
 @Component({
     selector: 'app-boards',
@@ -10,7 +11,7 @@ import { sortType } from './types/sort.type'
     styleUrls: ['./boards.component.scss'],
     animations: popupAnimations
 })
-export class BoardsComponent implements OnInit {
+export class BoardsComponent implements OnInit, OnDestroy {
     
     @ViewChild('searchInput') searchInputRef: ElementRef<HTMLInputElement>
     
@@ -23,6 +24,7 @@ export class BoardsComponent implements OnInit {
     showAddBoardPopup: boolean = false
     activeBoardId: number
     showBoardMembersPopup: boolean = false
+    subscriptions: Subscription[] = []
     
     constructor(public boardService: BoardService, private router: Router) {
     }
@@ -32,10 +34,14 @@ export class BoardsComponent implements OnInit {
         this.getBoards()
     }
     
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe())
+    }
+    
     getBoards(): void {
         this.loading = true
         
-        this.boardService.getAll(
+        const sub = this.boardService.getAll(
             this.isFavoritePage,
             this.isSortByName(),
             this.search,
@@ -46,6 +52,8 @@ export class BoardsComponent implements OnInit {
             this.boardService.boardsCount = boardsResponse.boardsCount
             this.loading = false
         })
+        
+        this.subscriptions.push(sub)
     }
     
     searchFocus(): void {
@@ -70,11 +78,13 @@ export class BoardsComponent implements OnInit {
             this.boardService.boardsCount--
         }
         
-        this.boardService.toggleFavorite(boardId).subscribe({
+        const sub = this.boardService.toggleFavorite(boardId).subscribe({
             error: () => {
                 board.liked = !board.liked
             }
         })
+        
+        this.subscriptions.push(sub)
     }
     
     onMembersClick(event: Event, boardId: number): void {
@@ -113,7 +123,7 @@ export class BoardsComponent implements OnInit {
     loadMoreBoards(): void {
         this.loadMoreLoading = true
         
-        this.boardService.getAll(
+        const sub = this.boardService.getAll(
             this.isFavoritePage,
             this.isSortByName(),
             this.search,
@@ -124,6 +134,8 @@ export class BoardsComponent implements OnInit {
             this.boardService.boardsCount = boardsResponse.boardsCount
             this.loadMoreLoading = false
         })
+        
+        this.subscriptions.push(sub)
     }
     
 }

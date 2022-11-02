@@ -1,14 +1,15 @@
 import {
-    AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit,
-    Output, ViewChild
+    AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output,
+    ViewChild
 } from '@angular/core'
+import { Subscription } from 'rxjs'
 import { popupAnimations } from '../../shared/animations/popup-animations'
 import { CardInterface } from '../../shared/types/card.interface'
 import { ListInterface } from '../../shared/types/list.interface'
 import { CardService } from '../shared/services/card.service'
 import { ListService } from '../shared/services/list.service'
 import { CreateCardRequestInterface } from '../shared/types/create-card-request.interface'
-import { DropInterface } from '../shared/types/drop.interface'
+import { DragDropInterface } from '../shared/types/drag-drop.interface'
 import { DroppedCardInterface } from '../shared/types/dropped-card.interface'
 
 @Component({
@@ -17,7 +18,7 @@ import { DroppedCardInterface } from '../shared/types/dropped-card.interface'
     styleUrls: ['./list.component.scss'],
     animations: popupAnimations
 })
-export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListComponent implements AfterViewInit, OnDestroy {
     
     @ViewChild('addCardButton') addCardButtonRef: ElementRef<HTMLButtonElement>
     @ViewChild('textarea') textareaRef: ElementRef<HTMLTextAreaElement>
@@ -26,7 +27,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() list: ListInterface
     @Input() allLists: ListInterface[]
     @Input() isCurrentUserAdmin: boolean
-    @Output() drop = new EventEmitter<DropInterface>()
+    @Output() drop = new EventEmitter<DragDropInterface>()
     @Output() cardDropped = new EventEmitter<DroppedCardInterface>()
     @Output() dragStart = new EventEmitter()
     @Output() dragEnd = new EventEmitter()
@@ -44,32 +45,34 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
     deleteListLoading: boolean = false
     showCardPopup: boolean = false
     openedCard: CardInterface | null = null
+    subscriptions: Subscription[] = []
     
     constructor(private cardService: CardService, private listService: ListService) {
     }
     
-    ngOnInit(): void {
-    }
-    
     ngAfterViewInit(): void {
-        document.addEventListener('click', (event) => {
-            if (this.addCardButtonRef?.nativeElement.contains(event.target as HTMLElement)) {
-                this.showAddCardForm = true
-                
-                setTimeout(() => {
-                    this.textareaRef?.nativeElement.focus()
-                })
-            } else {
-                this.hideForm()
-            }
-            
-            if (!this.listMenuRef?.nativeElement.contains(event.target as HTMLElement)) {
-                this.showListMenu = false
-            }
-        })
+        document.addEventListener('click', this.documentClickCb.bind(this))
     }
     
     ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe())
+        document.removeEventListener('click', this.documentClickCb.bind(this))
+    }
+    
+    documentClickCb(event: Event) {
+        if (this.addCardButtonRef?.nativeElement.contains(event.target as HTMLElement)) {
+            this.showAddCardForm = true
+            
+            setTimeout(() => {
+                this.textareaRef?.nativeElement.focus()
+            })
+        } else {
+            this.hideForm()
+        }
+        
+        if (!this.listMenuRef?.nativeElement.contains(event.target as HTMLElement)) {
+            this.showListMenu = false
+        }
     }
     
     onListMouseDown(event: MouseEvent): void {
@@ -92,7 +95,7 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
         
         this.addCardLoading = true
         
-        this.cardService.create(cardData).subscribe((card) => {
+        const sub = this.cardService.create(cardData).subscribe((card) => {
             this.list.cards.push({
                 ...card,
                 hasExecutor: false,
@@ -102,6 +105,8 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.addCardLoading = false
             this.newCardName = ''
         })
+        
+        this.subscriptions.push(sub)
     }
     
     hideForm() {
@@ -131,10 +136,12 @@ export class ListComponent implements OnInit, AfterViewInit, OnDestroy {
     onListDelete(): void {
         this.deleteListLoading = true
         
-        this.listService.deleteList(this.list.id).subscribe(() => {
+        const sub = this.listService.deleteList(this.list.id).subscribe(() => {
             const idx = this.allLists.findIndex(list => list.id === this.list.id)
             this.allLists.splice(idx, 1)
         })
+        
+        this.subscriptions.push(sub)
     }
     
     onCardClick(card: CardInterface): void {

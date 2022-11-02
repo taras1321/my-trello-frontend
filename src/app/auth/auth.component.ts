@@ -15,7 +15,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     form: FormGroup
     loading: boolean
     backEndError: string | null = null
-    userSubscription: Subscription
+    subscription: Subscription
     
     constructor(
         private router: Router,
@@ -29,8 +29,8 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
     
     ngOnDestroy(): void {
-        if (this.userSubscription) {
-            this.userSubscription.unsubscribe()
+        if (this.subscription) {
+            this.subscription.unsubscribe()
         }
     }
     
@@ -53,7 +53,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         this.loading = true
         
         if (this.isLoginPage) {
-            this.userSubscription = this.userService.login(this.form.value).subscribe({
+            this.subscription = this.userService.login(this.form.value).subscribe({
                 next: () => {
                     this.backEndError = null
                     this.loading = false
@@ -66,7 +66,7 @@ export class AuthComponent implements OnInit, OnDestroy {
                 }
             })
         } else {
-            this.userSubscription = this.userService.registration(this.form.value).subscribe({
+            this.subscription = this.userService.registration(this.form.value).subscribe({
                 next: () => {
                     this.backEndError = null
                     this.loading = false

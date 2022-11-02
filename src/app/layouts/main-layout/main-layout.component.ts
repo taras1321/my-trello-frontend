@@ -4,12 +4,12 @@ import { popupAnimations } from '../../shared/animations/popup-animations'
 import { AuthService } from '../../shared/services/auth.service'
 
 @Component({
-    selector: 'app-boards-layout',
-    templateUrl: './boards-layout.component.html',
-    styleUrls: ['./boards-layout.component.scss'],
+    selector: 'app-main-layout',
+    templateUrl: './main-layout.component.html',
+    styleUrls: ['./main-layout.component.scss'],
     animations: popupAnimations
 })
-export class BoardsLayoutComponent implements OnDestroy{
+export class MainLayoutComponent implements OnDestroy{
     
     showLogoutConfirm: boolean = false
     showMobileMenu: boolean = false

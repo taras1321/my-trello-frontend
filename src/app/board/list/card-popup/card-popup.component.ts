@@ -1,5 +1,8 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core'
+import {
+    Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output
+} from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { Subscription } from 'rxjs'
 import { popupAnimations } from '../../../shared/animations/popup-animations'
 import { CardInterface } from '../../../shared/types/card.interface'
 import { ListInterface } from '../../../shared/types/list.interface'
@@ -15,7 +18,7 @@ import { FullCardInterface } from '../../shared/types/full-card.interface'
     styleUrls: ['./card-popup.component.scss'],
     animations: popupAnimations
 })
-export class CardPopupComponent implements OnInit {
+export class CardPopupComponent implements OnInit, OnDestroy {
     
     @Input() currentList: ListInterface
     @Input() currentCard: CardInterface | null
@@ -36,6 +39,7 @@ export class CardPopupComponent implements OnInit {
     showDeleteCommentConfirm: boolean = false
     activeCommentId: number | null = null
     deleteCommentLoading: boolean = false
+    subscriptions: Subscription[] = []
     
     constructor(private cardService: CardService) {
     }
@@ -48,7 +52,7 @@ export class CardPopupComponent implements OnInit {
         
         this.loading = true
         
-        this.cardService.getCardById(this.currentCard.id).subscribe((card) => {
+        const sub = this.cardService.getCardById(this.currentCard.id).subscribe((card) => {
             this.card = card
             this.loading = false
             
@@ -57,6 +61,12 @@ export class CardPopupComponent implements OnInit {
                 description: new FormControl(this.card.description)
             })
         })
+        
+        this.subscriptions.push(sub)
+    }
+    
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe())
     }
     
     onSelectClick(event: Event): void {
@@ -75,7 +85,8 @@ export class CardPopupComponent implements OnInit {
             this.currentCard.hasExecutor = !!user
         }
         
-        this.cardService.setExecutor(userId, this.card.id).subscribe()
+        const sub = this.cardService.setExecutor(userId, this.card.id).subscribe()
+        this.subscriptions.push(sub)
     }
     
     onPopup(): void {
@@ -100,17 +111,20 @@ export class CardPopupComponent implements OnInit {
             cardData.name = this.form.value.name
         }
         
-        this.cardService.editCard(cardData, this.card.id).subscribe()
+        const sub = this.cardService.editCard(cardData, this.card.id).subscribe()
+        this.subscriptions.push(sub)
     }
     
     onCardDelete(): void {
         this.deleteLoading = true
         
-        this.cardService.deleteCard(this.card.id).subscribe(() => {
+        const sub = this.cardService.deleteCard(this.card.id).subscribe(() => {
             this.onClose.emit()
             const idx = this.currentList.cards.findIndex(card => card.id === this.card.id)
             this.currentList.cards.splice(idx, 1)
         })
+        
+        this.subscriptions.push(sub)
     }
     
     addComment(event?: Event): void {
@@ -122,7 +136,7 @@ export class CardPopupComponent implements OnInit {
         
         this.createCommentLoading = true
         
-        this.cardService.addComment(this.commentText, this.card.id).subscribe((comment) => {
+        const sub = this.cardService.addComment(this.commentText, this.card.id).subscribe((comment) => {
             this.card.comments.push(comment)
             this.createCommentLoading = false
             this.commentText = ''
@@ -131,6 +145,8 @@ export class CardPopupComponent implements OnInit {
                 this.currentCard.commentsCount++
             }
         })
+        
+        this.subscriptions.push(sub)
     }
     
     getCommentAuthor(comment: CommentInterface): string {
@@ -159,7 +175,7 @@ export class CardPopupComponent implements OnInit {
         
         this.deleteCommentLoading = true
         
-        this.cardService.deleteComment(this.activeCommentId).subscribe(() => {
+        const sub = this.cardService.deleteComment(this.activeCommentId).subscribe(() => {
             const idx = this.card.comments.findIndex(comment => comment.id === this.activeCommentId)
             this.card.comments.splice(idx, 1)
             this.deleteCommentLoading = false
@@ -169,6 +185,8 @@ export class CardPopupComponent implements OnInit {
                 this.currentCard.commentsCount--
             }
         })
+        
+        this.subscriptions.push(sub)
     }
     
 }

@@ -14,7 +14,7 @@ import { EditListPopupComponent } from './board/list/edit-list-popup/edit-list-p
 import { ListMenuComponent } from './board/list/list-menu/list-menu.component'
 import { ListComponent } from './board/list/list.component'
 import { BoardsComponent } from './boards/boards.component'
-import { BoardsLayoutComponent } from './layouts/boards-layout/boards-layout.component'
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component'
 import { SettingsComponent } from './settings/settings.component'
 import {
     AddOrEditBoardPopupComponent
@@ -42,7 +42,7 @@ import { AuthInterceptor } from './shared/services/auth.interceptor.service'
         BoardsComponent,
         LoaderComponent,
         BoardComponent,
-        BoardsLayoutComponent,
+        MainLayoutComponent,
         SettingsComponent,
         PopupComponent,
         ConfirmComponent,

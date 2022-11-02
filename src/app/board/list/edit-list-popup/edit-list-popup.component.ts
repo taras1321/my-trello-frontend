@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { Subscription } from 'rxjs'
 import { ListInterface } from '../../../shared/types/list.interface'
 import { ListService } from '../../shared/services/list.service'
 
@@ -8,7 +9,7 @@ import { ListService } from '../../shared/services/list.service'
     templateUrl: './edit-list-popup.component.html',
     styleUrls: ['./edit-list-popup.component.scss']
 })
-export class EditListPopupComponent implements OnInit {
+export class EditListPopupComponent implements OnInit, OnDestroy {
     
     @Input() listId: number
     @Input() listName: string
@@ -17,6 +18,7 @@ export class EditListPopupComponent implements OnInit {
     
     form: FormGroup
     loading: boolean = false
+    subscription: Subscription
     
     constructor(private listService: ListService) {
     }
@@ -27,18 +29,25 @@ export class EditListPopupComponent implements OnInit {
         })
     }
     
+    ngOnDestroy(): void {
+        if (this.subscription) {
+            this.subscription.unsubscribe()
+        }
+    }
+    
     submit(): void {
         this.loading = true
         
-        this.listService.editList(this.listId, this.form.value.name).subscribe((listData) => {
-            const list = this.allLists.find(list => list.id === listData.id)
-            
-            if (list) {
-                list.name = listData.name
-            }
-            
-            this.onClose.emit()
-        })
+        this.subscription = this.listService.editList(this.listId, this.form.value.name)
+            .subscribe((listData) => {
+                const list = this.allLists.find(list => list.id === listData.id)
+                
+                if (list) {
+                    list.name = listData.name
+                }
+                
+                this.onClose.emit()
+            })
     }
     
 }

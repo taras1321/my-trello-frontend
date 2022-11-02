@@ -3,13 +3,13 @@ import {
     AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild
 } from '@angular/core'
 import { ActivatedRoute, Params, Router } from '@angular/router'
-import { switchMap } from 'rxjs'
+import { Subscription, switchMap } from 'rxjs'
 import { BoardService } from '../shared/services/board.service'
 import { ChangeOrderInterface } from '../shared/types/change-order.interface'
 import { FullBoardInterface } from '../shared/types/full-board.interface'
 import { ListService } from './shared/services/list.service'
 import { CreateListRequestInterface } from './shared/types/create-list-request.interface'
-import { DropInterface } from './shared/types/drop.interface'
+import { DragDropInterface } from './shared/types/drag-drop.interface'
 import { DroppedCardInterface } from './shared/types/dropped-card.interface'
 
 @Component({
@@ -42,6 +42,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     intervalId: ReturnType<typeof setInterval>
     scrollDirection: 'right' | 'left' | null = null
     pixelToScroll: number | null = null
+    subscriptions: Subscription[] = []
     
     constructor(
         private boardService: BoardService,
@@ -54,7 +55,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
         this.boardLoading = true
         
-        this.route.params
+        const sub = this.route.params
             .pipe(switchMap((params: Params) => {
                 return this.boardService.getBoardById(+params['id'])
             }))
@@ -67,24 +68,37 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.router.navigate(['/'])
                 }
             })
+        
+        this.subscriptions.push(sub)
     }
     
     ngAfterViewInit(): void {
-        document.addEventListener('mouseup', () => {
-            this.isMouseDown = false
-        })
-        
-        document.addEventListener('mousemove', (event) => {
-            if (this.isMouseDown) {
-                const positionX = event.clientX
-                
-                this.boardRef.nativeElement.scrollLeft =
-                    this.scrollSizeAfterMouseDown - (positionX - this.positionXAfterMouseDown)
-            }
-        })
-        
+        document.addEventListener('mouseup', this.mouseUpCb.bind(this))
+        document.addEventListener('mousemove', this.mouseMoveCb.bind(this))
         document.addEventListener('mousemove', this.scrollWhileDragging.bind(this))
         document.addEventListener('touchmove', this.scrollWhileDragging.bind(this))
+    }
+    
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe())
+        
+        document.removeEventListener('mouseup', this.mouseUpCb.bind(this))
+        document.removeEventListener('mousemove', this.mouseMoveCb.bind(this))
+        document.removeEventListener('mousemove', this.scrollWhileDragging.bind(this))
+        document.removeEventListener('touchmove', this.scrollWhileDragging.bind(this))
+    }
+    
+    mouseUpCb() {
+        this.isMouseDown = false
+    }
+    
+    mouseMoveCb(event: MouseEvent) {
+        if (this.isMouseDown) {
+            const positionX = event.clientX
+            
+            this.boardRef.nativeElement.scrollLeft =
+                this.scrollSizeAfterMouseDown - (positionX - this.positionXAfterMouseDown)
+        }
     }
     
     scrollWhileDragging(event: MouseEvent | TouchEvent) {
@@ -150,16 +164,13 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
     
-    ngOnDestroy(): void {
-    }
-    
     onMouseDown(event: MouseEvent): void {
         this.isMouseDown = true
         this.scrollSizeAfterMouseDown = this.boardRef.nativeElement.scrollLeft
         this.positionXAfterMouseDown = event.clientX
     }
     
-    drop({ event, listId }: DropInterface) {
+    drop({ event, listId }: DragDropInterface) {
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex)
         } else {
@@ -178,7 +189,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
             cardId: this.droppedCardId
         }
         
-        this.boardService.changeOrder(data).subscribe()
+        const sub = this.boardService.changeOrder(data).subscribe()
+        this.subscriptions.push(sub)
     }
     
     cardDropped({ listId, cardId }: DroppedCardInterface): void {
@@ -225,7 +237,7 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
             name: this.newListTitle, boardId: this.boardData.id
         }
         
-        this.listService.addList(listData).subscribe((newList) => {
+        const sub = this.listService.addList(listData).subscribe((newList) => {
             this.boardData.lists.push({ ...newList, cards: [] })
             this.newListLoading = false
             this.newListTitle = ''
@@ -234,6 +246,8 @@ export class BoardComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.boardRef.nativeElement.scrollLeft = this.boardRef.nativeElement.scrollWidth
             })
         })
+        
+        this.subscriptions.push(sub)
     }
     
     onAddListButtonMouseDown(event: MouseEvent): void {

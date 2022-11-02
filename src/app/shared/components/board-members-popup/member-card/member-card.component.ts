@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core'
 import { Router } from '@angular/router'
+import { Subscription } from 'rxjs'
 import { popupAnimations } from '../../../animations/popup-animations'
 import { BoardService } from '../../../services/board.service'
-import { AddMemberInterface } from '../../../types/add-member.interface'
+import { AddOrRemoveMemberInterface } from '../../../types/add-or-remove-member.interface'
 import { BoardMembersInterface } from '../../../types/board-members.interface'
 import { UserWithBoardStatusType } from '../../../types/user-with-board-status.type'
 
@@ -12,7 +13,7 @@ import { UserWithBoardStatusType } from '../../../types/user-with-board-status.t
     styleUrls: ['./member-card.component.scss'],
     animations: popupAnimations
 })
-export class MemberCardComponent {
+export class MemberCardComponent implements OnDestroy{
     
     @Input() isCurrentUserCard: boolean = false
     @Input() isCurrentUserAdmin: boolean
@@ -24,19 +25,24 @@ export class MemberCardComponent {
     loading: boolean
     isDeleteLoading: boolean
     showDeleteConfirm: boolean = false
+    subscriptions: Subscription[] = []
     
     constructor(private boardService: BoardService, private router: Router) {
     }
     
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe())
+    }
+    
     makeAdmin() {
-        const data: AddMemberInterface = {
+        const data: AddOrRemoveMemberInterface = {
             boardId: this.boardId,
             userId: this.member.id
         }
         
         this.loading = true
         
-        this.boardService.addAdmin(data).subscribe(() => {
+        const sub = this.boardService.addAdmin(data).subscribe(() => {
             const changedMember = this.boardMembersData.members
                 .find(member => member.id === this.member.id)
             this.loading = false
@@ -45,17 +51,19 @@ export class MemberCardComponent {
                 changedMember.isAdmin = true
             }
         })
+        
+        this.subscriptions.push(sub)
     }
     
     makeMember() {
-        const data: AddMemberInterface = {
+        const data: AddOrRemoveMemberInterface = {
             boardId: this.boardId,
             userId: this.member.id
         }
         
         this.loading = true
         
-        this.boardService.addMember(data).subscribe(() => {
+        const sub = this.boardService.addMember(data).subscribe(() => {
             const changedMember = this.boardMembersData.members
                 .find(member => member.id === this.member.id)
             this.loading = false
@@ -64,6 +72,8 @@ export class MemberCardComponent {
                 changedMember.isAdmin = false
             }
         })
+        
+        this.subscriptions.push(sub)
     }
     
     getDeleteConfirmText(): string {
@@ -110,18 +120,21 @@ export class MemberCardComponent {
     }
     
     deleteMember(): void {
-        const data: AddMemberInterface = {
+        const data: AddOrRemoveMemberInterface = {
             boardId: this.boardId,
             userId: this.member.id
         }
         
         this.isDeleteLoading = true
+        let sub: Subscription
         
         if (this.member.isAdmin) {
-            this.boardService.removeAdmin(data).subscribe(this.removeMemberSubCb.bind(this))
+            sub = this.boardService.removeAdmin(data).subscribe(this.removeMemberSubCb.bind(this))
         } else {
-            this.boardService.removeMember(data).subscribe(this.removeMemberSubCb.bind(this))
+            sub = this.boardService.removeMember(data).subscribe(this.removeMemberSubCb.bind(this))
         }
+        
+        this.subscriptions.push(sub)
     }
     
 }

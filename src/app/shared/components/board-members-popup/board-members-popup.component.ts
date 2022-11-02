@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
+import { Subscription } from 'rxjs'
 import { popupAnimations } from '../../animations/popup-animations'
 import { BoardService } from '../../services/board.service'
 import { BoardMembersInterface } from '../../types/board-members.interface'
@@ -9,7 +10,7 @@ import { BoardMembersInterface } from '../../types/board-members.interface'
     styleUrls: ['./board-members-popup.component.scss'],
     animations: popupAnimations
 })
-export class BoardMembersPopupComponent implements OnInit {
+export class BoardMembersPopupComponent implements OnInit, OnDestroy {
     
     @Input() boardId: number
     @Output() onClose = new EventEmitter()
@@ -17,6 +18,7 @@ export class BoardMembersPopupComponent implements OnInit {
     loading: boolean = false
     boardMembersData: BoardMembersInterface
     showAddMemberPopup: boolean = false
+    sub: Subscription
     
     constructor(private boardService: BoardService) {
     }
@@ -24,10 +26,16 @@ export class BoardMembersPopupComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true
         
-        this.boardService.getBoardMembers(this.boardId).subscribe((boardMembersData) => {
+        this.sub = this.boardService.getBoardMembers(this.boardId).subscribe((boardMembersData) => {
             this.boardMembersData = boardMembersData
             this.loading = false
         })
+    }
+    
+    ngOnDestroy(): void {
+        if (this.sub) {
+            this.sub.unsubscribe()
+        }
     }
     
     getCurrentBoardAdminEmails(): string[] {

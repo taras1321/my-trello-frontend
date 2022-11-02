@@ -18,6 +18,9 @@
                         class="menu-link"
                         (click)="closeMobileMenu()"
                     >
+                        <span class="material-symbols-outlined icon">
+                            space_dashboard
+                        </span>
                         All boards
                     </a>
                 </li>
@@ -29,6 +32,9 @@
                         class="menu-link"
                         (click)="closeMobileMenu()"
                     >
+                        <span class="material-symbols-outlined icon star">
+                            star
+                        </span>
                         Favorite boards
                     </a>
                 </li>
@@ -40,12 +46,20 @@
                         class="menu-link"
                         (click)="closeMobileMenu()"
                     >
+                        <span class="material-symbols-outlined icon">
+                            settings
+                        </span>
                         Settings
                     </a>
                 </li>
                 
                 <li class="menu-item">
-                    <button class="logout" (click)="onLogoutClick()">Log out</button>
+                    <button class="logout" (click)="onLogoutClick()">
+                        <span class="material-symbols-outlined icon">
+                            logout
+                        </span>
+                        Log out
+                    </button>
                 </li>
             </ul>
         </div>

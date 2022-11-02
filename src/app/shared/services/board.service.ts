@@ -2,9 +2,9 @@ import { HttpClient, HttpParams } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 import { environment } from '../../../environments/environment'
-import { sortType } from '../../boards/types/sort.type'
-import { viewType } from '../../boards/types/view.type'
-import { AddMemberInterface } from '../types/add-member.interface'
+import { sortType } from '../types/sort.type'
+import { viewType } from '../types/view.type'
+import { AddOrRemoveMemberInterface } from '../types/add-or-remove-member.interface'
 import { BoardMembersInterface } from '../types/board-members.interface'
 import { BoardInterface } from '../types/board.interface'
 import { BoardsResponseInterface } from '../types/boards-response.interface'
@@ -88,22 +88,22 @@ export class BoardService {
         return this.http.get<BoardMembersInterface>(url)
     }
     
-    addAdmin(data: AddMemberInterface): Observable<void> {
+    addAdmin(data: AddOrRemoveMemberInterface): Observable<void> {
         const url = environment.apiUrl + '/board/add-admin'
         return this.http.post<void>(url, data)
     }
     
-    addMember(data: AddMemberInterface): Observable<void> {
+    addMember(data: AddOrRemoveMemberInterface): Observable<void> {
         const url = environment.apiUrl + '/board/add-member'
         return this.http.post<void>(url, data)
     }
     
-    removeAdmin(data: AddMemberInterface): Observable<void> {
+    removeAdmin(data: AddOrRemoveMemberInterface): Observable<void> {
         const url = environment.apiUrl + '/board/remove-admin'
         return this.http.post<void>(url, data)
     }
     
-    removeMember(data: AddMemberInterface): Observable<void> {
+    removeMember(data: AddOrRemoveMemberInterface): Observable<void> {
         const url = environment.apiUrl + '/board/remove-member'
         return this.http.post<void>(url, data)
     }

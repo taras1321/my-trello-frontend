@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router'
+import { Subscription } from 'rxjs'
 import { popupAnimations } from '../../animations/popup-animations'
 import { BoardService } from '../../services/board.service'
 import { BoardColorsType } from '../../types/board-colors.type'
@@ -13,7 +14,7 @@ import { FullBoardInterface } from '../../types/full-board.interface'
     styleUrls: ['./add-or-edit-board-popup.component.scss'],
     animations: popupAnimations
 })
-export class AddOrEditBoardPopupComponent implements OnInit {
+export class AddOrEditBoardPopupComponent implements OnInit, OnDestroy {
     
     @Input() isEditBoard: boolean = false
     @Input() editBoardData: FullBoardInterface
@@ -24,6 +25,7 @@ export class AddOrEditBoardPopupComponent implements OnInit {
     deleteBoardLoading: boolean = false
     showDeleteConfirm: boolean = false
     color: BoardColorsType
+    subscriptions: Subscription[] = []
     
     constructor(private boardService: BoardService, private router: Router) {
     }
@@ -39,6 +41,10 @@ export class AddOrEditBoardPopupComponent implements OnInit {
         })
     }
     
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe())
+    }
+    
     submit(): void {
         const boardData: CreateOrEditBoardInterface = {
             name: this.form.value['boardName'],
@@ -48,24 +54,30 @@ export class AddOrEditBoardPopupComponent implements OnInit {
         this.loading = true
         
         if (this.isEditBoard) {
-            this.boardService.editBoard(boardData, this.editBoardData.id).subscribe((boardData) => {
+            const sub = this.boardService.editBoard(boardData, this.editBoardData.id).subscribe((boardData) => {
                 this.editBoardData.name = boardData.name
                 this.editBoardData.color = boardData.color
                 this.onClose.emit()
             })
+            
+            this.subscriptions.push(sub)
         } else {
-            this.boardService.createBoard(boardData).subscribe(({ id }) => {
+            const sub = this.boardService.createBoard(boardData).subscribe(({ id }) => {
                 this.router.navigate(['boards', id])
             })
+    
+            this.subscriptions.push(sub)
         }
     }
     
     deleteBoard() {
         this.deleteBoardLoading = true
         
-        this.boardService.deleteBoard(this.editBoardData.id).subscribe(() => {
+        const sub = this.boardService.deleteBoard(this.editBoardData.id).subscribe(() => {
             this.router.navigate(['/'])
         })
+        
+        this.subscriptions.push(sub)
     }
     
 }

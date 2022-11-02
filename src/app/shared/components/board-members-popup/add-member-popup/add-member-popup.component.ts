@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core'
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { Subscription } from 'rxjs'
 import { BoardService } from '../../../services/board.service'
 import { UserService } from '../../../services/user.service'
-import { AddMemberInterface } from '../../../types/add-member.interface'
+import { AddOrRemoveMemberInterface } from '../../../types/add-or-remove-member.interface'
 import { BoardMembersInterface } from '../../../types/board-members.interface'
 import { UserInterface } from '../../../types/user.interface'
 
@@ -11,7 +12,7 @@ import { UserInterface } from '../../../types/user.interface'
     templateUrl: './add-member-popup.component.html',
     styleUrls: ['./add-member-popup.component.scss']
 })
-export class AddMemberPopupComponent implements OnInit {
+export class AddMemberPopupComponent implements OnInit, OnDestroy {
     
     @Input() boardId: number
     @Input() boardAdminEmails: string[]
@@ -25,6 +26,7 @@ export class AddMemberPopupComponent implements OnInit {
     user: UserInterface | null = null
     userLoading: boolean = false
     addMemberLoading: boolean = false
+    subscriptions: Subscription[] = []
     
     constructor(
         private boardService: BoardService,
@@ -36,6 +38,10 @@ export class AddMemberPopupComponent implements OnInit {
         this.form = new FormGroup({
             email: new FormControl(null, [Validators.required, Validators.email])
         })
+    }
+    
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe())
     }
     
     hasUserByEmailThisBoard(email: string): boolean {
@@ -57,7 +63,7 @@ export class AddMemberPopupComponent implements OnInit {
         
         this.userLoading = true
         
-        this.userService.getUserByEmail(email).subscribe({
+        const sub = this.userService.getUserByEmail(email).subscribe({
             next: (user) => {
                 this.user = user
                 this.userLoading = false
@@ -69,6 +75,8 @@ export class AddMemberPopupComponent implements OnInit {
                 this.userLoading = false
             }
         })
+        
+        this.subscriptions.push(sub)
     }
     
     addMember() {
@@ -76,14 +84,14 @@ export class AddMemberPopupComponent implements OnInit {
             return
         }
         
-        const data: AddMemberInterface = {
+        const data: AddOrRemoveMemberInterface = {
             boardId: this.boardId,
             userId: this.user?.id
         }
         
         this.addMemberLoading = true
         
-        this.boardService.addMember(data).subscribe(() => {
+        const sub = this.boardService.addMember(data).subscribe(() => {
             if (!this.user) {
                 return
             }
@@ -98,6 +106,8 @@ export class AddMemberPopupComponent implements OnInit {
                 board.membersCount++
             }
         })
+        
+        this.subscriptions.push(sub)
     }
     
 }
