@@ -1,0 +1,32 @@
+<app-popup (onClose)="onClose.emit()" maxWidth="400px">
+    <div class="wrap">
+        <h3>Change name</h3>
+    
+        <form [formGroup]="form" (ngSubmit)="submit()">
+            <div class="input-wrap">
+                <label class="label">
+                    <input
+                        type="text"
+                        class="input"
+                        formControlName="name"
+                        [ngClass]="{
+                        active: this.form.get('name')?.value?.length > 0,
+                        error: this.form.get('name')?.errors && this.form.get('name')?.touched
+                    }"
+                    >
+                    <span class="label-text">New name</span>
+                    <span
+                        *ngIf="this.form.get('name')?.errors && this.form.get('name')?.touched"
+                        class="error-text"
+                    >Enter a valid name</span>
+                </label>
+            </div>
+            
+            <app-button
+                [loading]="loading"
+                [disabled]="form.invalid"
+                [type]="'summit'"
+            >Save</app-button>
+        </form>
+    </div>
+</app-popup>

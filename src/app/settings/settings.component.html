@@ -1,1 +1,79 @@
-<p>settings works!</p>
+<div class="settings" *ngIf="!userLoading; else loader">
+    <h1>Settings</h1>
+    
+    <div class="user-data">
+        <div class="info">
+            <div class="title">Name</div>
+            <div class="value">{{ user.name }}</div>
+        </div>
+        
+        <app-button
+            size="medium"
+            (onClick)="showChangeNamePopup = true"
+        >Change
+        </app-button>
+    </div>
+    
+    <div class="user-data">
+        <div class="info">
+            <div class="title">Email</div>
+            <div class="value">{{ user.email }}</div>
+        </div>
+        
+        <app-button
+            size="medium"
+            (onClick)="showChangeEmailPopup = true"
+        >Change
+        </app-button>
+    </div>
+    
+    <div class="buttons">
+        <app-button
+            (onClick)="showChangePasswordPopup = true"
+        >Change password
+        </app-button>
+        
+        <app-button
+            color="red"
+            (onClick)="showDeleteAccountConfirm = true"
+        >Delete account
+        </app-button>
+    </div>
+</div>
+
+<ng-template #loader>
+    <div class="loader-wrap">
+        <app-loader></app-loader>
+    </div>
+</ng-template>
+
+<div class="popup-wrap" *ngIf="showChangeNamePopup" @popup>
+    <app-change-name-popup
+        [user]="user"
+        (onClose)="showChangeNamePopup = false"
+    ></app-change-name-popup>
+</div>
+
+<div class="popup-wrap" *ngIf="showChangeEmailPopup" @popup>
+    <app-change-email-popup
+        [user]="user"
+        (onClose)="showChangeEmailPopup = false"
+    ></app-change-email-popup>
+</div>
+
+<div class="popup-wrap" *ngIf="showChangePasswordPopup" @popup>
+    <app-change-password-popup
+        (onClose)="showChangePasswordPopup = false"
+    ></app-change-password-popup>
+</div>
+
+<div @popup class="popup-wrap" *ngIf="showDeleteAccountConfirm">
+    <app-confirm
+        (onCancel)="showDeleteAccountConfirm = false"
+        [text]="'Are you sure want to delete your account?'"
+        buttonText="Delete"
+        (onConfirm)="deleteAccount()"
+        [loading]="deleteAccountLoading"
+    >
+    </app-confirm>
+</div>

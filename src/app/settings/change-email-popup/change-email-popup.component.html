@@ -1,0 +1,36 @@
+<app-popup (onClose)="onClose.emit()" maxWidth="400px">
+    <div class="wrap">
+        <h3>Change email</h3>
+        
+        <form [formGroup]="form" (ngSubmit)="submit()" [style.gap]="error ? '20px' : '30px'">
+            <div class="input-wrap">
+                <label class="label">
+                    <input
+                        type="text"
+                        class="input"
+                        formControlName="email"
+                        [ngClass]="{
+                        active: this.form.get('email')?.value?.length > 0,
+                        error: this.form.get('email')?.errors && this.form.get('email')?.touched
+                    }"
+                    >
+                    <span class="label-text">New email</span>
+                    <span
+                        *ngIf="this.form.get('email')?.errors && this.form.get('email')?.touched"
+                        class="error-text"
+                    >Enter a valid email</span>
+                </label>
+            </div>
+            
+            <div class="backend-error" *ngIf="error">
+                {{ error }}
+            </div>
+            
+            <app-button
+                [loading]="loading"
+                [disabled]="form.invalid"
+                [type]="'summit'"
+            >Save</app-button>
+        </form>
+    </div>
+</app-popup>

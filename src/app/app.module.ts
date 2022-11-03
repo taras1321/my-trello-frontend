@@ -15,6 +15,13 @@ import { ListMenuComponent } from './board/list/list-menu/list-menu.component'
 import { ListComponent } from './board/list/list.component'
 import { BoardsComponent } from './boards/boards.component'
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component'
+import {
+    ChangeEmailPopupComponent
+} from './settings/change-email-popup/change-email-popup.component'
+import { ChangeNamePopupComponent } from './settings/change-name-popup/change-name-popup.component'
+import {
+    ChangePasswordPopupComponent
+} from './settings/change-password-popup/change-password-popup.component'
 import { SettingsComponent } from './settings/settings.component'
 import {
     AddOrEditBoardPopupComponent
@@ -54,7 +61,10 @@ import { AuthInterceptor } from './shared/services/auth.interceptor.service'
         HeaderComponent,
         ListMenuComponent,
         EditListPopupComponent,
-        CardPopupComponent
+        CardPopupComponent,
+        ChangeNamePopupComponent,
+        ChangeEmailPopupComponent,
+        ChangePasswordPopupComponent
     ],
     imports: [
         BrowserModule,
