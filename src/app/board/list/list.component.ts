@@ -1,3 +1,4 @@
+import { DragStartDelay } from '@angular/cdk/drag-drop'
 import {
     AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Output,
     ViewChild
@@ -46,6 +47,10 @@ export class ListComponent implements AfterViewInit, OnDestroy {
     showCardPopup: boolean = false
     openedCard: CardInterface | null = null
     subscriptions: Subscription[] = []
+    dragStartDelay: DragStartDelay = {
+        touch: 200,
+        mouse: 0
+    }
     
     constructor(private cardService: CardService, private listService: ListService) {
     }

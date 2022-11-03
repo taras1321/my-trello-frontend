@@ -29,13 +29,15 @@
         </div>
         
         <button
-            *ngFor="let item of list.cards" cdkDrag
+            *ngFor="let item of list.cards"
+            cdkDrag
             class="card"
             (cdkDragDropped)="cardDropped.emit({ listId: list.id, cardId: item.id })"
             (cdkDragStarted)="dragStart.emit()"
             (cdkDragEnded)="dragEnd.emit()"
             (click)="onCardClick(item)"
             [class.pb30]="item.hasExecutor || item.commentsCount > 0"
+            [cdkDragStartDelay]="dragStartDelay"
         >
             {{ item.name }}
             
@@ -45,7 +47,7 @@
                 </span>
                 {{ item.commentsCount }}
             </span>
-    
+            
             <span class="material-symbols-outlined user" *ngIf="item.hasExecutor">
                 person
             </span>
