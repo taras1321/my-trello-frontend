@@ -110,7 +110,7 @@
                             <div class="date">{{ comment.createdDate | date:'d MMM yyyy'}}</div>
                             <button
                                 *ngIf="card.isCurrentUserAdmin || comment.user.id == card.currentUserId"
-                                (click)="onDeleteCommentClick(comment.id)"
+                                (click)="onDeleteCommentClick(comment)"
                                 class="material-symbols-outlined delete"
                             >
                                 close

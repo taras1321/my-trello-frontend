@@ -37,7 +37,7 @@ export class CardPopupComponent implements OnInit, OnDestroy {
     commentText: string = ''
     createCommentLoading: boolean = false
     showDeleteCommentConfirm: boolean = false
-    activeCommentId: number | null = null
+    activeComment: CommentInterface | null = null
     deleteCommentLoading: boolean = false
     subscriptions: Subscription[] = []
     
@@ -160,32 +160,50 @@ export class CardPopupComponent implements OnInit, OnDestroy {
         event.stopPropagation()
     }
     
-    onDeleteCommentClick(id: number): void {
+    onDeleteCommentClick(comment: CommentInterface): void {
         this.showDeleteCommentConfirm = true
-        this.activeCommentId = id
+        this.activeComment = comment
     }
     
     closeDeleteCommentConfirm(): void {
         this.showDeleteCommentConfirm = false
-        this.activeCommentId = null
+        this.activeComment = null
     }
     
     onCommentDelete(): void {
-        if (!this.activeCommentId) {
+        if (!this.activeComment) {
             return
         }
         
         this.deleteCommentLoading = true
         
-        const sub = this.cardService.deleteComment(this.activeCommentId).subscribe(() => {
-            const idx = this.card.comments.findIndex(comment => comment.id === this.activeCommentId)
+        const sub = this.cardService.deleteComment(this.activeComment.id).subscribe(() => {
+            const idx = this.card.comments
+                .findIndex(comment => comment.id === this.activeComment?.id)
             this.card.comments.splice(idx, 1)
             this.deleteCommentLoading = false
-            this.closeDeleteCommentConfirm()
             
             if (this.currentCard) {
                 this.currentCard.commentsCount--
             }
+            
+            const currentCard = this.currentList.cards.find(card => card.id === card.id)
+            
+            if (!currentCard) {
+                this.closeDeleteCommentConfirm()
+                return
+            }
+    
+            const commentsCountByUser = currentCard.commentsCountByUser
+                .find(user => user.userId === this.activeComment?.user.id)
+            
+            if (!commentsCountByUser) {
+                this.closeDeleteCommentConfirm()
+                return
+            }
+            
+            commentsCountByUser.commentsCount--
+            this.closeDeleteCommentConfirm()
         })
         
         this.subscriptions.push(sub)
