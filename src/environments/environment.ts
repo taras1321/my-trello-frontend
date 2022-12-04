@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://my-trello-backend.herokuapp.com'
+    apiUrl: 'https://web-production-bad7.up.railway.app'
 }
